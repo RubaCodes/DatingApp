@@ -1,22 +1,29 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <a class="navbar-brand">Dating App</a>
-        <ul *ngIf="accountService.currentUser$ | async" class="navbar-nav me-auto mb-2 mb-lg-0">
+        <a class="navbar-brand" routerLink="/">Dating App</a>
+        <ul  class="navbar-nav me-auto mb-2 mb-lg-0">
+          <!-- separatore utlie che non genera markup html -->
+          <ng-container *ngIf="accountService.currentUser$ | async">
           <li class="nav-item">
-            <a class="nav-link"  href="#">Matches</a>
+            <a class="nav-link" routerLink="/members" routerLinkActive="active">Members</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link"  href="#">Lists</a>
+            <a class="nav-link" routerLink="lists" routerLinkActive="active">Lists</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Messages</a>
+            <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
+          </li>
+          </ng-container>
+          <!-- questa non viene lockata nel container -->
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active">About us</a>
           </li>
         </ul>
         
-        <div class="dropdown" dropdown *ngIf="accountService.currentUser$ | async">
-          <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{model.username}}</a>
+        <div class="dropdown" dropdown *ngIf="(accountService.currentUser$ | async) as user">
+          <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.username | titlecase}}</a>
           <div class="dropdown-menu mt-2" *bsDropdownMenu="">
             <a class="dropdown-item">Edit Profile</a>
             <div class="dropdown-devider-spacing"></div>
@@ -37,7 +44,7 @@
               class="form-control me-2" 
               type="password" 
               placeholder="Password"> 
-          <button class="btn btn-outline-success" type="submit">Login</button>
+          <button class="btn btn-success" type="submit">Login</button>
         </form>
       </div>
     </div>
