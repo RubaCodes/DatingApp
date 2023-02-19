@@ -11,26 +11,26 @@ import { MessagesComponent } from './messages/messages.component';
 import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
-  { path: "", component: HomeComponent },
-  { path: "members", component: MemberListComponent, canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent },
+  { path: 'members', component: MemberListComponent, canActivate: [AuthGuard] },
   //una sorta di grouping per il middleware di auth
   {
-    path: "",
-    runGuardsAndResolvers: "always",
+    path: '',
+    runGuardsAndResolvers: 'always',
     children: [
-      { path: "members/:id", component: MemberDetailComponent },
-      { path: "lists", component: ListsComponent },
-      { path: "messages", component: MessagesComponent },
-    ]
+      { path: 'members/:username', component: MemberDetailComponent },
+      { path: 'lists', component: ListsComponent },
+      { path: 'messages', component: MessagesComponent },
+    ],
   },
-      { path: "error", component: TestErrorComponent, pathMatch: "full" },
-      { path: "not-found", component: NotFoundComponent, pathMatch: "full"},
-      { path: "server-error", component: ServerErrorComponent, pathMatch: "full"},
-      { path: "**", component: NotFoundComponent, pathMatch: "full" },
+  { path: 'error', component: TestErrorComponent, pathMatch: 'full' },
+  { path: 'not-found', component: NotFoundComponent, pathMatch: 'full' },
+  { path: 'server-error', component: ServerErrorComponent, pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
