@@ -62,7 +62,7 @@ namespace API
             {
                 endpoints.MapControllers();
             });
-            //For seeding
+            // For seeding
             // using var scope = app.ApplicationServices.CreateScope();
             // var services = scope.ServiceProvider;
             // try
@@ -77,6 +77,7 @@ namespace API
             //     var logger = services.GetService<ILogger<Program>>();
             //     logger.LogError(ex, "An error occured during migration");
             // }
+
         }
     }
 }

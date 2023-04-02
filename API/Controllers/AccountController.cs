@@ -8,6 +8,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using System.Security.Cryptography;
@@ -18,10 +19,12 @@ namespace API.Controllers
     {
         private readonly DataContext _cxt;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
             _tokenService = tokenService;
+            _mapper = mapper;
             _cxt = context;
         }
 
@@ -32,21 +35,22 @@ namespace API.Controllers
             using var hmac = new HMACSHA512(); //alg cript, con dispose della classe al temine dell'istanza
             //check for uniqueness of username
             if (await UserExist(registerDto.Username)) return BadRequest("Username is taken");
+
+            var user = _mapper.Map<AppUser>(registerDto);
             // create new user 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
             //add the user
             _cxt.AppUsers.Add(user);
             //save changes async            
             await _cxt.SaveChangesAsync();
 
-            return new UserDto{
+            return new UserDto
+            {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
         [HttpPost("login")]
@@ -65,7 +69,8 @@ namespace API.Controllers
                 if (ComputeHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
             }
 
-            return new UserDto{
+            return new UserDto
+            {
                 Username = user.UserName,
                 Token = _tokenService.CreateToken(user)
             };
