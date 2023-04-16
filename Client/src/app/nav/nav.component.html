@@ -3,27 +3,47 @@
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <a class="navbar-brand" routerLink="/">Dating App</a>
-        <ul  class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- separatore utlie che non genera markup html -->
           <ng-container *ngIf="accountService.currentUser$ | async">
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/members" routerLinkActive="active">Members</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="lists" routerLinkActive="active">Lists</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
-          </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLink="/members"
+                routerLinkActive="active"
+                >Members</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="lists" routerLinkActive="active"
+                >Lists</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                routerLink="/messages"
+                routerLinkActive="active"
+                >Messages</a
+              >
+            </li>
           </ng-container>
           <!-- questa non viene lockata nel container -->
           <li class="nav-item">
-            <a class="nav-link" routerLink="/error" routerLinkActive="active">Errors</a>
+            <a class="nav-link" routerLink="/error" routerLinkActive="active"
+              >Errors</a
+            >
           </li>
         </ul>
-        
-        <div class="dropdown" dropdown *ngIf="(accountService.currentUser$ | async) as user">
-          <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.username | titlecase}}</a>
+
+        <div
+          class="dropdown"
+          dropdown
+          *ngIf="accountService.currentUser$ | async as user"
+        >
+          <a class="dropdown-toggle text-light" dropdownToggle
+            >Welcome {{ user.username | titlecase }}</a
+          >
           <div class="dropdown-menu mt-2" *bsDropdownMenu="">
             <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
             <div class="dropdown-devider-spacing"></div>
@@ -31,22 +51,30 @@
           </div>
         </div>
 
-        <form *ngIf="(accountService.currentUser$ | async) == null" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()" autocomplete="off">
-          <input 
-              name="username"  
-              [(ngModel)]="model.username"
-              class="form-control me-2" 
-              type="search" 
-              placeholder="Username"> 
-          <input 
-              name="password"
-              [(ngModel)]="model.password"
-              class="form-control me-2" 
-              type="password" 
-              placeholder="Password"> 
+        <form
+          *ngIf="(accountService.currentUser$ | async) == null"
+          #loginForm="ngForm"
+          class="d-flex"
+          (ngSubmit)="login()"
+          autocomplete="off"
+        >
+          <input
+            name="username"
+            [(ngModel)]="model.username"
+            class="form-control me-2"
+            type="search"
+            placeholder="Username"
+          />
+          <input
+            name="password"
+            [(ngModel)]="model.password"
+            class="form-control me-2"
+            type="password"
+            placeholder="Password"
+          />
           <button class="btn btn-success" type="submit">Login</button>
         </form>
       </div>
     </div>
-  </div> 
-  </nav>
+  </div>
+</nav>

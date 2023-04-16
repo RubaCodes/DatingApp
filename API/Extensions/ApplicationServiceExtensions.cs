@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +16,7 @@ namespace API.Extensions
                 x.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
             services.AddScoped<ITokenService, TokenService>(); // in realta l'intefaccia e' in piu, ma serve per testing
+            services.AddScoped<LogUserActivity>();
             //Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             //AutoMapper
