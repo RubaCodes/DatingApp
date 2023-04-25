@@ -9,11 +9,30 @@ namespace API.Data
 {
     public class DataContext : DbContext
     {
-        //dichiaro le mie tabelle
-        public DbSet<AppUser> AppUsers { get; set; }
-        //costruttore di default
         public DataContext(DbContextOptions options) : base(options)
         {
+        }
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<UserLike> Likes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            //come a lavoro , creo il builder manualmente
+            builder.Entity<UserLike>()
+            .HasKey(k => new { k.SourceUserId, k.TargetUserId });
+            builder.Entity<UserLike>()
+
+            .HasOne(s => s.SourceUser)
+            .WithMany(l => l.LikedUsers)
+            .HasForeignKey(s => s.SourceUserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserLike>()
+            .HasOne(s => s.TargetUser)
+            .WithMany(l => l.LikedByUsers)
+            .HasForeignKey(s => s.TargetUserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
