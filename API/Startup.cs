@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Interfaces;
 using API.Middleware;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +49,7 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ExceptionMiddleware>();
 
@@ -63,20 +65,22 @@ namespace API
                 endpoints.MapControllers();
             });
             // For seeding
-            // using var scope = app.ApplicationServices.CreateScope();
-            // var services = scope.ServiceProvider;
-            // try
-            // {
-            //     var context = services.GetRequiredService<DataContext>();
-            //     await context.Database.MigrateAsync();
-            //     await Seed.SeedUser(context);
+            using var scope = app.ApplicationServices.CreateScope();
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<DataContext>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+                var rolesManager = services.GetRequiredService<RoleManager<AppRole>>();
+                await context.Database.MigrateAsync();
+                await Seed.SeedUser(userManager, rolesManager); ;
 
-            // }
-            // catch (Exception ex)
-            // {
-            //     var logger = services.GetService<ILogger<Program>>();
-            //     logger.LogError(ex, "An error occured during migration");
-            // }
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetService<ILogger<Program>>();
+                logger.LogError(ex, "An error occured during migration");
+            }
 
         }
     }

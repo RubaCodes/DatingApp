@@ -27,6 +27,11 @@
                 >Messages</a
               >
             </li>
+            <li class="nav-item" *appHasRole="['Admin', 'Moderator']">
+              <a class="nav-link" routerLink="/admin" routerLinkActive="active"
+                >Admin Panel</a
+              >
+            </li>
           </ng-container>
           <!-- questa non viene lockata nel container -->
           <li class="nav-item">
